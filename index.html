@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pro Quote Generator — Clean Light UI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+            --radius: 14px;
+        }
+
+        /* dark mode vars */
+        body.dark {
+            --bg: #0f1724;
+            --card: #111827;
+            --muted: #9ca3af;
+            --accent: #60a5fa;
+            --shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+        }
+
+        body {
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            transition: background .25s ease;
+            color: #0f1724;
+        }
+
+        body.dark {
+            color: #e6eef8
+        }
+
+        /* Card */
+        .card {
+            width: 100%;
+            max-width: 720px;
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.98));
+            box-shadow: var(--shadow);
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+            transform-origin: center;
+            animation: floatIn .6s cubic-bezier(.2, .9, .3, 1);
+        }
+
+        body.dark .card {
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.95));
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.995)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+
+        /* Left column (quote) */
+        .left {
+            padding: 4px 8px;
+        }
+
+        .title {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .title h1 {
+            font-size: 20px;
+            margin: 0;
+            font-weight: 700
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 6px 0 0
+        }
+
+        .quoteBox {
+            min-height: 160px;
+            padding: 18px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.5));
+            backdrop-filter: blur(6px);
+            box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+            color: #0b1220;
+            font-size: 20px;
+            line-height: 1.5;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        body.dark .quoteBox {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+            color: #eef6ff;
+            box-shadow: none;
+        }
+
+        .author {
+            margin-top: 12px;
+            text-align: center;
+            color: var(--muted);
+            font-style: italic
+        }
+
+        /* Right column (controls) */
+        .right {
+            padding: 8px;
+        }
+
+        .control-panel {
+            background: transparent;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label.small {
+            font-size: 13px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        select.input,
+        .btn {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            background: var(--card);
+            font-size: 15px;
+            color: inherit;
+        }
+
+        body.dark select.input {
+            border-color: rgba(255, 255, 255, 0.04);
+            background: transparent;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            padding: 10px 14px;
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            font-weight: 600;
+        }
+
+        body.dark .btn.secondary {
+            border-color: rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+            vertical-align: middle;
+            opacity: 0.95
+        }
+
+        .small-note {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px;
+            text-align: center
+        }
+
+        /* responsive */
+        @media (max-width:820px) {
+            .card {
+                grid-template-columns: 1fr;
+            }
+
+            .right {
+                order: 2
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card" role="application" aria-labelledby="appTitle">
+        <div class="left">
+            <div class="title">
+                <div>
+                    <h1 id="appTitle">Quote Generator</h1>
+                    <div class="subtitle"></div>
+                </div>
+
+                <div style="display:flex;gap:8px;align-items:center">
+                    <button id="darkToggle" class="btn secondary" title="Toggle dark mode" onclick="toggleDark()"
+                        aria-pressed="false">
+                        <!-- moon icon -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor"
+                                stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span style="font-weight:600">Dark</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="quoteBox" id="quoteBox" aria-live="polite" aria-atomic="true">Click <strong>Get Quote</strong>
+                or press <kbd>Enter</kbd></div>
+            <div class="author" id="author">—</div>
+        </div>
+
+        <aside class="right" aria-label="Controls">
+            <div class="control-panel" role="region" aria-labelledby="controlsLabel">
+                <div id="controlsLabel" style="font-weight:600">Controls</div>
+
+                <div>
+                    <label class="small" for="category">Category</label>
+                    <select id="category" class="input" aria-controls="quoteBox">
+                        <option value="motivational">Motivation</option>
+                        <option value="love">Love</option>
+                        <option value="success">Success</option>
+                        <option value="life">Life</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <button id="getBtn" class="btn" title="Get a new quote (API then fallback)">
+                        <!-- bolt icon -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.4"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Get Quote
+                    </button>
+
+                    <button id="copyBtn" class="btn secondary" title="Copy quote to clipboard">
+                        <!-- copy icon -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M9 9H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4" stroke="currentColor"
+                                stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M17 7V5a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor"
+                                stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+
+                <div class="controls-grid">
+                    <button id="prevBtn" class="btn secondary" title="Previous quote (←)">
+                        <!-- left -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Prev
+                    </button>
+
+                    <button id="nextBtn" class="btn secondary" title="Next quote (→)">
+                        <!-- right -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Next
+                    </button>
+
+                    <button id="shareBtn" class="btn" title="Share via WhatsApp">
+                        <!-- share -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 12v7a1 1 0 0 0 1 1h7" stroke="currentColor" stroke-width="1.4"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M20 6l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M20 6v7h-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Share
+                    </button>
+
+                    <button id="downloadBtn" class="btn secondary" title="Download quote image">
+                        <!-- download -->
+                        <svg class="icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.4"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 15V3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <div class="small-note">Tip: press <kbd>Enter</kbd> to fetch, ← / → to navigate.</div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        /* ======= Professional Quote App JS ======= */
+
+        /* Simple offline quote bank (small sample; extend as needed) */
+        const offlineQuotes = {
+            motivational: [
+                { text: "Push yourself because no one else will.", author: "Unknown" },
+                { text: "Don't stop when you’re tired. Stop when you’re done.", author: "Unknown" },
+                { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+                { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+                { text: "Success is what happens after you have survived all your mistakes.", author: "Unknown" },
+                { text: "Great things never come from comfort zones.", author: "Unknown" },
+                { text: "If you can dream it, you can do it.", author: "Walt Disney" },
+                { text: "Work hard in silence. Let success make the noise.", author: "Frank Ocean" },
+                { text: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+                { text: "It always seems impossible until it’s done.", author: "Nelson Mandela" },
+                { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+                { text: "Your limitation—it's only your imagination.", author: "Unknown" },
+                { text: "Don't wait for opportunity. Create it.", author: "George Bernard Shaw" },
+                { text: "A journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+                { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+                { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+                { text: "Only I can change my life. No one can do it for me.", author: "Carol Burnett" },
+                { text: "Quality is not an act, it is a habit.", author: "Aristotle" },
+                { text: "The future depends on what you do today.", author: "Mahatma Gandhi" },
+                { text: "If you want it, work for it.", author: "Unknown" },
+                { text: "You don’t get what you wish for. You get what you work for.", author: "Unknown" },
+                { text: "Small steps every day lead to big results.", author: "Unknown" },
+                { text: "Don’t be afraid to give up the good for the great.", author: "John D. Rockefeller" },
+                { text: "You miss 100% of the shots you don’t take.", author: "Wayne Gretzky" },
+                { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+                { text: "Stay hungry. Stay foolish.", author: "Steve Jobs" },
+                { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+                { text: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
+                { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+                { text: "Make each day your masterpiece.", author: "John Wooden" },
+                { text: "Don’t limit your challenges. Challenge your limits.", author: "Unknown" },
+                { text: "You are stronger than you think.", author: "Unknown" },
+                { text: "Big journeys begin with small steps.", author: "Unknown" },
+                { text: "Prove them wrong.", author: "Unknown" }
+
+  ],
+       love: [
+{ text:"Where there is love there is life.", author:"Mahatma Gandhi" },
+{ text:"Love all, trust a few.", author:"William Shakespeare" },
+{ text:"The best thing to hold onto in life is each other.", author:"Audrey Hepburn" },
+{ text:"You are my today and all of my tomorrows.", author:"Leo Christopher" },
+{ text:"Love is composed of a single soul inhabiting two bodies.", author:"Aristotle" },
+{ text:"To love and be loved is to feel the sun from both sides.", author:"David Viscott" },
+{ text:"I look at you and see the rest of my life in front of my eyes.", author:"Unknown" },
+{ text:"Love recognizes no barriers.", author:"Maya Angelou" },
+{ text:"We are most alive when we're in love.", author:"John Updike" },
+{ text:"You are my greatest adventure.", author:"Unknown" },
+{ text:"I love you more than yesterday, but less than tomorrow.", author:"Unknown" },
+{ text:"If I know what love is, it is because of you.", author:"Hermann Hesse" },
+{ text:"Love is the bridge between two hearts.", author:"Unknown" },
+{ text:"Forever is a long time, but I wouldn’t mind spending it with you.", author:"Unknown" },
+{ text:"The heart wants what it wants.", author:"Woody Allen" },
+{ text:"True love stories never have endings.", author:"Richard Bach" },
+{ text:"I am yours, don’t give myself back to me.", author:"Rumi" },
+{ text:"You make my heart smile.", author:"Unknown" },
+{ text:"Your love is all I need.", author:"Unknown" },
+{ text:"You are my favorite feeling.", author:"Unknown" },
+{ text:"My heart is and always will be yours.", author:"Jane Austen" },
+{ text:"I fell in love with your soul before your face.", author:"Unknown" },
+{ text:"You are the reason I believe in love.", author:"Unknown" },
+{ text:"Love is when the other person's happiness is more important than your own.", author:"H. Jackson Brown Jr." },
+{ text:"You are the poem I never knew how to write.", author:"Unknown" },
+{ text:"Love cures people—both the ones who give it and the ones who receive it.", author:"Karl Menninger" },
+{ text:"You complete me.", author:"Jerry Maguire" },
+{ text:"Love is a better teacher than duty.", author:"Albert Einstein" },
+{ text:"Every love story is beautiful, but ours is my favorite.", author:"Unknown" },
+{ text:"You are the first and last thought of my day.", author:"Unknown" },
+{ text:"Together is a wonderful place to be.", author:"Unknown" },
+{ text:"Love is friendship set on fire.", author:"Jeremy Taylor" },
+{ text:"You are my happy place.", author:"Unknown" },
+{ text:"Home is wherever you are.", author:"Unknown" },
+{ text:"I still fall for you every day.", author:"Unknown" }
+],
+
+success: [
+{ text:"Success is not final; failure is not fatal.", author:"Winston Churchill" },
+{ text:"Opportunities don't happen, you create them.", author:"Chris Grosser" },
+{ text:"Success usually comes to those who are too busy to be looking for it.", author:"Henry David Thoreau" },
+{ text:"Don’t be afraid to give up the good to go for the great.", author:"John D. Rockefeller" },
+{ text:"Success is walking from failure to failure without losing enthusiasm.", author:"Winston Churchill" },
+{ text:"The secret of success is consistency of purpose.", author:"Benjamin Disraeli" },
+{ text:"All progress takes place outside the comfort zone.", author:"Michael John Bobak" },
+{ text:"Success is not in what you have, but who you are.", author:"Bo Bennett" },
+{ text:"I never dreamed about success. I worked for it.", author:"Estée Lauder" },
+{ text:"Your success is what inspires others.", author:"Unknown" },
+{ text:"Don't aim for success. Aim for value.", author:"Albert Einstein" },
+{ text:"Success comes to those who dare and act.", author:"Jawaharlal Nehru" },
+{ text:"The way to get started is to quit talking and begin doing.", author:"Walt Disney" },
+{ text:"Success is the sum of small efforts repeated daily.", author:"Robert Collier" },
+{ text:"Winners never quit and quitters never win.", author:"Vince Lombardi" },
+{ text:"Chase the vision, not the money.", author:"Tony Hsieh" },
+{ text:"Success demands sacrifice.", author:"Unknown" },
+{ text:"The best revenge is massive success.", author:"Frank Sinatra" },
+{ text:"Success is earned, not given.", author:"Unknown" },
+{ text:"Don’t wait for success; create it.", author:"Unknown" },
+{ text:"Aim for progress, not perfection.", author:"Unknown" },
+{ text:"Success is a journey, not a destination.", author:"Arthur Ashe" },
+{ text:"Do one thing every day that scares you.", author:"Eleanor Roosevelt" },
+{ text:"Your only limit is you.", author:"Unknown" },
+{ text:"Success is believing you can.", author:"Unknown" },
+{ text:"You become what you believe.", author:"Oprah Winfrey" },
+{ text:"Winning is a habit.", author:"Vince Lombardi" },
+{ text:"Great achievements take time.", author:"Unknown" },
+{ text:"Success starts with self-discipline.", author:"Unknown" },
+{ text:"Success is built on daily habits.", author:"Unknown" },
+{ text:"The road to success is uphill.", author:"Willie Davis" },
+{ text:"Failure is the key to success.", author:"Morihei Ueshiba" },
+{ text:"Success is falling nine times and getting up ten.", author:"Jon Bon Jovi" },
+{ text:"To succeed, first believe you can.", author:"Nikos Kazantzakis" },
+{ text:"Success follows persistence.", author:"Unknown" }
+],
+
+                life: [
+{ text:"Life is really simple, but we insist on making it complicated.", author:"Confucius" },
+{ text:"Enjoy every moment.", author:"Unknown" },
+{ text:"In three words I can sum up everything I've learned about life: it goes on.", author:"Robert Frost" },
+{ text:"Life is short. Live it. Love it.", author:"Unknown" },
+{ text:"The purpose of life is to live it.", author:"Eleanor Roosevelt" },
+{ text:"Life is either a daring adventure or nothing at all.", author:"Helen Keller" },
+{ text:"Life begins at the end of your comfort zone.", author:"Neale Donald Walsch" },
+{ text:"Life is what happens when you're busy making other plans.", author:"John Lennon" },
+{ text:"To live is the rarest thing in the world.", author:"Oscar Wilde" },
+{ text:"Life is a journey, not a race.", author:"Unknown" },
+{ text:"Life is made of small moments like this.", author:"Unknown" },
+{ text:"Life becomes easier when you accept the apology you never got.", author:"Unknown" },
+{ text:"Life is tough, but so are you.", author:"Unknown" },
+{ text:"Do what makes your soul shine.", author:"Unknown" },
+{ text:"Life is beautiful, enjoy the ride.", author:"Unknown" },
+{ text:"Life teaches, love reveals.", author:"Unknown" },
+{ text:"Life is 10% what happens to you and 90% how you react.", author:"Charles Swindoll" },
+{ text:"Life is too important to be taken seriously.", author:"Oscar Wilde" },
+{ text:"Life is about creating yourself.", author:"George Bernard Shaw" },
+{ text:"Live the life you imagine.", author:"Henry David Thoreau" },
+{ text:"Life rewards those who take risks.", author:"Unknown" },
+{ text:"Life begins today, not tomorrow.", author:"Unknown" },
+{ text:"Life is full of surprises.", author:"Unknown" },
+{ text:"Every moment is a fresh beginning.", author:"T.S. Eliot" },
+{ text:"Life is not a problem to be solved, but a reality to be experienced.", author:"Søren Kierkegaard" },
+{ text:"Life always offers a second chance. It’s called tomorrow.", author:"Unknown" },
+{ text:"Be a voice, not an echo.", author:"Unknown" },
+{ text:"Life is too short to wait.", author:"Unknown" },
+{ text:"The best things in life are free.", author:"Unknown" },
+{ text:"Life is an art—make yours a masterpiece.", author:"Unknown" },
+{ text:"Life moves pretty fast—if you don’t stop and look around, you might miss it.", author:"Ferris Bueller" },
+{ text:"Life is a story. Make yours a bestseller.", author:"Unknown" },
+{ text:"Life gets better when you decide not to care.", author:"Unknown" },
+{ text:"Life is lived one moment at a time.", author:"Unknown" },
+{ text:"Life is too beautiful to give up.", author:"Unknown" }
+],
+
+};
+
+        /* State */
+        let history = [];            // {q:{text,author}, category}
+        let index = -1;
+        let typingToken = { cancelled: false };
+
+        /* Elements */
+        const quoteBox = document.getElementById('quoteBox');
+        const authorEl = document.getElementById('author');
+        const categorySel = document.getElementById('category');
+        const getBtn = document.getElementById('getBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const darkToggle = document.getElementById('darkToggle');
+
+        /* Utilities */
+        function setStatus(msg) {
+            // small ephemeral status (author element used for short messages)
+            // but keep author for author text; so we won't override author persistently
+            // instead use aria-live via quoteBox for final messages (skip).
+        }
+
+        /* Auto-typing animation, cancelable */
+        function typeText(el, text, token, speed = 26) {
+            token.cancelled = false;
+            el.textContent = '';
+            let i = 0;
+            return new Promise(resolve => {
+                function step() {
+                    if (token.cancelled) { resolve(); return; }
+                    if (i < text.length) {
+                        el.textContent += text[i++];
+                        setTimeout(step, speed);
+                    } else {
+                        resolve();
+                    }
+                }
+                step();
+            });
+        }
+
+        /* Render quote (with typing) */
+        async function renderQuoteObj(obj) {
+            // cancel previous typing
+            typingToken.cancelled = true;
+            typingToken = { cancelled: false };
+            // small fade
+            quoteBox.style.opacity = 0.4;
+            authorEl.style.opacity = 0.4;
+
+            // await tiny delay so fade is visible
+            await new Promise(res => setTimeout(res, 120));
+
+            // type quote then set author
+            await typeText(quoteBox, obj.text, typingToken, 20);
+            if (!typingToken.cancelled) {
+                authorEl.textContent = "— " + (obj.author || "Unknown");
+                authorEl.style.opacity = 1;
+                quoteBox.style.opacity = 1;
+            }
+        }
+
+        /* Save to history (and update nav) */
+        function pushHistory(obj, category) {
+            // if not at end, cut forward
+            if (index < history.length - 1) history = history.slice(0, index + 1);
+            history.push({ q: obj, category });
+            index = history.length - 1;
+            updateNav();
+        }
+
+        /* Nav state update */
+        function updateNav() {
+            prevBtn.disabled = index <= 0;
+            nextBtn.disabled = index >= history.length - 1;
+        }
+
+        /* Pick offline fallback random */
+        function pickOffline(category) {
+            const arr = offlineQuotes[category] || [];
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        /* Try API first, fallback to offline */
+        async function fetchQuoteFromAPI(category) {
+            // quotable supports tags like 'life' and 'love' (but tag names might differ).
+            // We'll attempt a general random; using tag-param when available.
+            try {
+                // We try with tag = category (works partially); fallback to general random
+                const res = await fetch(`https://api.quotable.io/random?tags=${encodeURIComponent(category)}`, { cache: 'no-store' });
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                if (data && data.content) return { text: data.content, author: data.author || '' };
+            } catch (e) {
+                // fallback to general random
+                try {
+                    const res2 = await fetch('https://api.quotable.io/random', { cache: 'no-store' });
+                    if (!res2.ok) throw new Error('API fail 2');
+                    const d2 = await res2.json();
+                    if (d2 && d2.content) return { text: d2.content, author: d2.author || '' };
+                } catch (e2) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        /* Main: get quote (API -> fallback) */
+        async function getQuote() {
+            const category = categorySel.value;
+            getBtn.disabled = true;
+            getBtn.textContent = 'Loading…';
+
+            // fetch
+            let obj = await fetchQuoteFromAPI(category);
+            if (!obj) {
+                obj = pickOffline(category) || { text: 'No quotes available', author: '' };
+            }
+
+            // show with animation & push to history
+            await renderQuoteObj(obj);
+            pushHistory(obj, category);
+
+            getBtn.disabled = false;
+            getBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Get Quote`;
+        }
+
+        /* Prev / Next functions */
+        function prevQuote() {
+            if (index > 0) {
+                index--;
+                const entry = history[index];
+                renderQuoteObj(entry.q);
+                categorySel.value = entry.category;
+            }
+            updateNav();
+        }
+        function nextQuote() {
+            if (index < history.length - 1) {
+                index++;
+                const entry = history[index];
+                renderQuoteObj(entry.q);
+                categorySel.value = entry.category;
+            }
+            updateNav();
+        }
+
+        /* Copy to clipboard */
+        async function copyQuote() {
+            const text = quoteBox.innerText + " " + authorEl.innerText;
+            try {
+                await navigator.clipboard.writeText(text);
+                // small confirmation
+                const prev = copyBtn.innerHTML;
+                copyBtn.textContent = 'Copied ✓';
+                setTimeout(() => copyBtn.innerHTML = prev, 1200);
+            } catch (e) {
+                alert('Copy failed — your browser may block clipboard access.');
+            }
+        }
+
+        /* Share via WhatsApp (opens web.whatsapp) */
+        function shareQuote() {
+            const text = `${quoteBox.innerText} ${authorEl.innerText}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        /* Download quote as image (canvas) - wraps text */
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+            return y;
+        }
+
+        async function downloadImage() {
+            // create square image 1080x1080 (Instagram friendly)
+            const canvas = document.createElement('canvas');
+            const w = 1080;
+            const h = 1080;
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+
+            // background gradient
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(1, '#f0f6ff');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            // card area
+            const padding = 100;
+            ctx.fillStyle = '#ffffff';
+            ctx.globalAlpha = 0.95;
+            ctx.fillRect(padding / 2, padding / 2, w - padding, h - padding);
+            ctx.globalAlpha = 1;
+
+            // quote text
+            ctx.fillStyle = '#0b1220';
+            ctx.font = 'bold 44px Poppins, sans-serif';
+            ctx.textBaseline = 'top';
+
+            const quote = quoteBox.innerText;
+            const author = authorEl.innerText;
+
+            // wrap
+            const startY = 240;
+            const maxW = w - padding;
+            const lineH = 58;
+            let finalY = wrapText(ctx, quote, padding, startY, maxW, lineH);
+
+            // author
+            ctx.font = '600 32px Poppins, sans-serif';
+            ctx.fillStyle = '#334155';
+            ctx.fillText(author, padding + 20, finalY + 40);
+
+            // download
+            const link = document.createElement('a');
+            link.download = 'quote-card.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        /* Toggle dark */
+        function toggleDark() {
+            const pressed = document.body.classList.toggle('dark');
+            darkToggle.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+        }
+
+        /* Keyboard bindings */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { getQuote(); }
+            if (e.key === 'ArrowLeft') { prevQuote(); }
+            if (e.key === 'ArrowRight') { nextQuote(); }
+        });
+
+        /* Wire UI */
+        getBtn.addEventListener('click', getQuote);
+        prevBtn.addEventListener('click', prevQuote);
+        nextBtn.addEventListener('click', nextQuote);
+        copyBtn.addEventListener('click', copyQuote);
+        shareBtn.addEventListener('click', shareQuote);
+        downloadBtn.addEventListener('click', downloadImage);
+        darkToggle.addEventListener('click', toggleDark);
+
+        /* Initialize - show a quote from offline to avoid empty UI */
+        (async function init() {
+            const sample = pickOffline(categorySel.value);
+            if (sample) {
+                pushHistory(sample, categorySel.value);
+                await renderQuoteObj(sample);
+            }
+            updateNav();
+        })();
+    </script>
+</body>
+
+</html>
